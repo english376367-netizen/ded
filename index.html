@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>English 9 – Phonetics, Vocabulary &amp; Grammar</title>
+<style>
+:root{--blue:#174ea6;--orange:#ffb58a;--green:#168447;--red:#c62828;--border:#dbe5f4;--text:#1f2937}
+*{box-sizing:border-box}body{margin:0;background:#eef3f9;color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.55}
+.container{max-width:1050px;margin:auto;padding:16px}.hero{background:linear-gradient(135deg,#174ea6,#2d72d9);color:#fff;border-radius:20px;padding:24px 20px;margin-bottom:18px;box-shadow:0 8px 25px #0002}
+.hero h1{margin:0 0 5px;font-size:28px}.hero p{margin:4px 0;opacity:.94}
+.nav{position:sticky;top:0;z-index:10;background:#ffffffee;backdrop-filter:blur(8px);padding:10px;border-bottom:1px solid var(--border);margin:0 -16px 18px}
+.nav a{display:inline-block;margin:3px;padding:8px 11px;border-radius:999px;background:#eaf1ff;color:var(--blue);text-decoration:none;font-weight:700;font-size:13px}
+.section{background:white;border-radius:18px;margin:18px 0;box-shadow:0 4px 18px #17355d18;overflow:hidden}
+.section-head{background:linear-gradient(90deg,var(--orange),#ffd4bf);padding:13px 17px;font-size:19px;font-weight:800;color:#fff;display:flex;justify-content:space-between;gap:10px}
+.score{background:#fff;color:var(--blue);border-radius:999px;padding:3px 11px;font-size:14px;white-space:nowrap}
+.section-body{padding:16px}.question{border:1px solid var(--border);border-radius:14px;padding:14px;margin:12px 0;background:#fbfdff}
+.qtext{font-size:16px;margin-bottom:10px}.num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#e8f0ff;color:var(--blue);font-weight:800;margin-right:7px}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.option{border:2px solid #d9e4f3;background:#fff;padding:10px 12px;border-radius:12px;text-align:left;font-size:15px;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:9px}
+.option:hover{transform:translateY(-1px);border-color:#7da5e8}.option.selected,.inline-choice.selected{border-color:var(--blue);background:#eaf2ff}
+.option.correct,.inline-choice.correct{border-color:var(--green);background:#dcf7e7}.option.wrong,.inline-choice.wrong{border-color:var(--red);background:#ffe1e1}
+.letter{font-weight:800;color:var(--blue);min-width:22px}.feedback{margin-top:9px;font-weight:800;min-height:24px}
+.feedback.good{color:var(--green)}.feedback.bad{color:var(--red)}.explanation{display:none;margin-top:8px;padding:10px 12px;border-left:4px solid #6f9ee8;background:#f2f6ff;border-radius:8px;font-size:14px}
+.show{display:block}.vocab-mini{margin-top:8px;font-size:13px;color:#48576a}
+.check-btn,.reset-btn{border:0;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer;margin:8px 6px 0 0}
+.check-btn{background:var(--blue);color:#fff}.reset-btn{background:#edf1f7;color:#243247}
+.word-box{background:#fff6ee;border:2px dashed #ffad7e;padding:12px;border-radius:12px;margin-bottom:12px;text-align:center;font-style:italic}
+.fill-input{border:0;border-bottom:2px solid #6e8bb4;outline:none;background:#fffde8;padding:4px 7px;min-width:150px;font-size:16px;font-weight:700}
+.bracket-q .qtext{line-height:2}.inline-choice{border:0;border-bottom:2px solid #6e8bb4;background:#fffde8;padding:1px 5px;font-weight:700;cursor:pointer}
+.phon-option{position:relative}.phon-word u{text-decoration-thickness:2px;text-underline-offset:3px}
+.speak{margin-left:auto;font-size:20px;padding:2px 5px;border-radius:8px;background:#eef6ff;cursor:pointer}.phon-note{font-size:13px;color:#52647c;margin-top:8px}
+.note{padding:13px;background:#fff8df;border-left:4px solid #f0b429;border-radius:10px;margin:12px 0}
+footer{text-align:center;color:#637083;font-size:13px;padding:25px}
+@media(max-width:700px){body{font-size:15px}.container{padding:10px}.hero h1{font-size:23px}.section-head{font-size:16px}.options{grid-template-columns:1fr}.qtext{font-size:15px}.option{font-size:14px;padding:9px}.nav{margin:0 -10px 14px;overflow-x:auto;white-space:nowrap}.fill-input{min-width:110px;max-width:65vw}}
+
+/* Layout fix: prevent questions from collapsing into a narrow vertical strip */
+html, body { width: 100%; overflow-x: hidden; }
+.container { width: 100%; max-width: 1050px; margin-left: auto; margin-right: auto; }
+.section { width: 100%; }
+.section-body { width: 100%; min-width: 0; }
+.question { width: 100%; min-width: 0; display: block; }
+.options { width: 100%; min-width: 0; }
+.option { width: 100%; min-width: 0; }
+@media (min-width: 701px) {
+  #exercise1 .options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .container { width: 100%; max-width: none; padding: 10px; }
+  .section { width: 100%; }
+  #exercise1 .options { grid-template-columns: 1fr 1fr; }
+  #exercise1 .option { min-height: 54px; }
+}
+
+
+/* FINAL LAYOUT FIX */
+#exercise1,
+#exercise1 .section-body,
+#exercise1 .question,
+#exercise1 .qtext,
+#exercise1 .options {
+  box-sizing: border-box;
+}
+#exercise1 {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+#exercise1 .section-body {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+#exercise1 .question {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+#exercise1 .options {
+  display: grid !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 9px !important;
+}
+#exercise1 .option {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+@media (max-width: 700px) {
+  #exercise1 .options {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+
+/* Emphasize the word/phrase students must find the meaning of */
+#synonym .qtext strong u,
+#antonym .qtext strong u {
+  font-weight: 800;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<header class="hero"><h1>English 9 – Phonetics, Vocabulary &amp; Grammar</h1><p>Interactive practice • Chấm điểm • Giải thích bằng tiếng Việt • Từ vựng + ngữ pháp</p></header>
+<nav class="nav">
+<a href="#phon1">Phonetics 1</a><a href="#phon2">Stress</a><a href="#exercise1">Exercise 1 – 39 questions</a><a href="#bracket">Exercise 2</a><a href="#fill">Exercise 3</a><a href="#synonym">Synonym</a><a href="#antonym">Antonym</a>
+</nav>
+<div class="note"><b>Cách dùng:</b> Chọn đáp án → bấm <b>Chấm bài</b>. Đáp án đúng và giải thích chỉ hiện ra sau khi bấm <b>Chấm bài</b>. Ở phần phát âm, bấm 🔊 để nghe từng từ bằng giọng <b>English (UK)</b> nếu trình duyệt hỗ trợ.</div>
+<section class="section" id="phon1">
+<div class="section-head"><span>PHONETICS – Exercise 1: Underlined sound</span><span class="score" id="phon1-score">0 / 5</span></div>
+<div class="section-body">
+<div class="question" data-answer="A">
+<div class="qtext"><span class="num">1</span>Mark the word whose underlined part differs from the other three.</div>
+<div class="options">
+<button class="phon-option option" data-value="A">
+<span class="letter">A</span>
+<span class="phon-word">phys<u>i</u>cal</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('physical')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="B">
+<span class="letter">B</span>
+<span class="phon-word">m<u>i</u>nimise</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('minimise')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="C">
+<span class="letter">C</span>
+<span class="phon-word">pr<u>i</u>ority</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('priority')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="D">
+<span class="letter">D</span>
+<span class="phon-word">deadl<u>i</u>ne</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('deadline')" title="Listen">🔊</span>
+</button></div>
+<div class="phon-note">🔊 Tap the speaker to hear the word.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Theo đáp án đã cung cấp trong ảnh, chọn <b>A. physical</b>. Hãy nghe từng từ và so sánh phần gạch chân/trọng âm.</div>
+</div>
+<div class="question" data-answer="B">
+<div class="qtext"><span class="num">2</span>Mark the word whose underlined part differs from the other three.</div>
+<div class="options">
+<button class="phon-option option" data-value="A">
+<span class="letter">A</span>
+<span class="phon-word">c<u>a</u>rry</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('carry')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="B">
+<span class="letter">B</span>
+<span class="phon-word">g<u>a</u>rbage</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('garbage')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="C">
+<span class="letter">C</span>
+<span class="phon-word">p<u>a</u>ragraph</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('paragraph')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="D">
+<span class="letter">D</span>
+<span class="phon-word"><u>a</u>ttraction</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('attraction')" title="Listen">🔊</span>
+</button></div>
+<div class="phon-note">🔊 Tap the speaker to hear the word.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Theo đáp án đã cung cấp trong ảnh, chọn <b>B. garbage</b>. Hãy nghe từng từ và so sánh phần gạch chân/trọng âm.</div>
+</div>
+<div class="question" data-answer="C">
+<div class="qtext"><span class="num">3</span>Mark the word whose underlined part differs from the other three.</div>
+<div class="options">
+<button class="phon-option option" data-value="A">
+<span class="letter">A</span>
+<span class="phon-word"><u>a</u>ccomplish</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('accomplish')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="B">
+<span class="letter">B</span>
+<span class="phon-word"><u>a</u>dditional</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('additional')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="C">
+<span class="letter">C</span>
+<span class="phon-word"><u>a</u>nxiety</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('anxiety')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="D">
+<span class="letter">D</span>
+<span class="phon-word"><u>a</u>ssignment</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('assignment')" title="Listen">🔊</span>
+</button></div>
+<div class="phon-note">🔊 Tap the speaker to hear the word.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Theo đáp án đã cung cấp trong ảnh, chọn <b>C. anxiety</b>. Hãy nghe từng từ và so sánh phần gạch chân/trọng âm.</div>
+</div>
+<div class="question" data-answer="C">
+<div class="qtext"><span class="num">4</span>Mark the word whose underlined part differs from the other three.</div>
+<div class="options">
+<button class="phon-option option" data-value="A">
+<span class="letter">A</span>
+<span class="phon-word">h<u>ea</u>d</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('head')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="B">
+<span class="letter">B</span>
+<span class="phon-word">br<u>ea</u>d</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('bread')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="C">
+<span class="letter">C</span>
+<span class="phon-word">l<u>ea</u>ve</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('leave')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="D">
+<span class="letter">D</span>
+<span class="phon-word">inst<u>ea</u>d</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('instead')" title="Listen">🔊</span>
+</button></div>
+<div class="phon-note">🔊 Tap the speaker to hear the word.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Theo đáp án đã cung cấp trong ảnh, chọn <b>C. leave</b>. Hãy nghe từng từ và so sánh phần gạch chân/trọng âm.</div>
+</div>
+<div class="question" data-answer="B">
+<div class="qtext"><span class="num">5</span>Mark the word whose underlined part differs from the other three.</div>
+<div class="options">
+<button class="phon-option option" data-value="A">
+<span class="letter">A</span>
+<span class="phon-word">c<u>o</u>unsellor</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('counsellor')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="B">
+<span class="letter">B</span>
+<span class="phon-word">phys<u>i</u>cal</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('physical')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="C">
+<span class="letter">C</span>
+<span class="phon-word">opt<u>i</u>mistic</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('optimistic')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="D">
+<span class="letter">D</span>
+<span class="phon-word">subm<u>i</u>t</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('submit')" title="Listen">🔊</span>
+</button></div>
+<div class="phon-note">🔊 Tap the speaker to hear the word.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Theo đáp án đã cung cấp trong ảnh, chọn <b>B. physical</b>. Hãy nghe từng từ và so sánh phần gạch chân/trọng âm.</div>
+</div>
+<button class="check-btn" onclick="checkSection('phon1')">✓ Chấm bài</button>
+<button class="reset-btn" onclick="resetSection('phon1')">↻ Làm lại</button>
+</div>
+</section>
+<section class="section" id="phon2">
+<div class="section-head"><span>PHONETICS – Exercise 2: Primary stress</span><span class="score" id="phon2-score">0 / 5</span></div>
+<div class="section-body">
+<div class="question" data-answer="C">
+<div class="qtext"><span class="num">1</span>Mark the word that differs in the position of primary stress.</div>
+<div class="options">
+<button class="phon-option option" data-value="A">
+<span class="letter">A</span>
+<span class="phon-word"><u>o</u>rganise</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('organise')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="B">
+<span class="letter">B</span>
+<span class="phon-word">phys<u>i</u>cal</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('physical')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="C">
+<span class="letter">C</span>
+<span class="phon-word">m<u>ai</u>ntaining</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('maintaining')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="D">
+<span class="letter">D</span>
+<span class="phon-word">c<u>o</u>unsellor</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('counsellor')" title="Listen">🔊</span>
+</button></div>
+<div class="phon-note">🔊 Tap the speaker to hear the word.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Theo đáp án đã cung cấp trong ảnh, chọn <b>C. maintaining</b>. Hãy nghe từng từ và so sánh phần gạch chân/trọng âm.</div>
+</div>
+<div class="question" data-answer="D">
+<div class="qtext"><span class="num">2</span>Mark the word that differs in the position of primary stress.</div>
+<div class="options">
+<button class="phon-option option" data-value="A">
+<span class="letter">A</span>
+<span class="phon-word">w<u>o</u>rried</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('worried')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="B">
+<span class="letter">B</span>
+<span class="phon-word">c<u>o</u>gnitive</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('cognitive')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="C">
+<span class="letter">C</span>
+<span class="phon-word">c<u>o</u>ncentrate</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('concentrate')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="D">
+<span class="letter">D</span>
+<span class="phon-word">fr<u>u</u>strated</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('frustrated')" title="Listen">🔊</span>
+</button></div>
+<div class="phon-note">🔊 Tap the speaker to hear the word.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Theo đáp án đã cung cấp trong ảnh, chọn <b>D. frustrated</b>. Hãy nghe từng từ và so sánh phần gạch chân/trọng âm.</div>
+</div>
+<div class="question" data-answer="A">
+<div class="qtext"><span class="num">3</span>Mark the word that differs in the position of primary stress.</div>
+<div class="options">
+<button class="phon-option option" data-value="A">
+<span class="letter">A</span>
+<span class="phon-word">d<u>i</u>sappoint</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('disappoint')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="B">
+<span class="letter">B</span>
+<span class="phon-word">b<u>a</u>dminton</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('badminton')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="C">
+<span class="letter">C</span>
+<span class="phon-word">conf<u>i</u>dent</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('confident')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="D">
+<span class="letter">D</span>
+<span class="phon-word">med<u>i</u>cal</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('medical')" title="Listen">🔊</span>
+</button></div>
+<div class="phon-note">🔊 Tap the speaker to hear the word.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Theo đáp án đã cung cấp trong ảnh, chọn <b>A. disappoint</b>. Hãy nghe từng từ và so sánh phần gạch chân/trọng âm.</div>
+</div>
+<div class="question" data-answer="C">
+<div class="qtext"><span class="num">4</span>Mark the word that differs in the position of primary stress.</div>
+<div class="options">
+<button class="phon-option option" data-value="A">
+<span class="letter">A</span>
+<span class="phon-word">adv<u>i</u>se</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('advise')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="B">
+<span class="letter">B</span>
+<span class="phon-word">del<u>a</u>y</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('delay')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="C">
+<span class="letter">C</span>
+<span class="phon-word">m<u>e</u>ntal</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('mental')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="D">
+<span class="letter">D</span>
+<span class="phon-word"><u>a</u>wake</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('awake')" title="Listen">🔊</span>
+</button></div>
+<div class="phon-note">🔊 Tap the speaker to hear the word.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Theo đáp án đã cung cấp trong ảnh, chọn <b>C. mental</b>. Hãy nghe từng từ và so sánh phần gạch chân/trọng âm.</div>
+</div>
+<div class="question" data-answer="D">
+<div class="qtext"><span class="num">5</span>Mark the word that differs in the position of primary stress.</div>
+<div class="options">
+<button class="phon-option option" data-value="A">
+<span class="letter">A</span>
+<span class="phon-word"><u>a</u>ccomplish</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('accomplish')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="B">
+<span class="letter">B</span>
+<span class="phon-word"><u>a</u>ssignment</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('assignment')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="C">
+<span class="letter">C</span>
+<span class="phon-word">d<u>i</u>straction</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('distraction')" title="Listen">🔊</span>
+</button>
+<button class="phon-option option" data-value="D">
+<span class="letter">D</span>
+<span class="phon-word">m<u>i</u>nimise</span>
+<span class="speak" onclick="event.stopPropagation(); speakWord('minimise')" title="Listen">🔊</span>
+</button></div>
+<div class="phon-note">🔊 Tap the speaker to hear the word.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Theo đáp án đã cung cấp trong ảnh, chọn <b>D. minimise</b>. Hãy nghe từng từ và so sánh phần gạch chân/trọng âm.</div>
+</div>
+<button class="check-btn" onclick="checkSection('phon2')">✓ Chấm bài</button>
+<button class="reset-btn" onclick="resetSection('phon2')">↻ Làm lại</button>
+</div>
+</section>
+<section class="section" id="exercise1">
+<div class="section-head">
+<span>EXERCISE 1 – VOCABULARY, GRAMMAR &amp; MODAL VERBS</span>
+<span class="score" id="exercise1-score">0 / 39</span>
+</div>
+<div class="section-body">
+<div class="note"><b>39 questions</b> • Choose A, B, C, or D. The answer key and Vietnamese explanation are hidden until you click <b>Chấm bài</b>.</div>
+<div class="question" data-answer="A">
+<div class="qtext"><span class="num">1</span>Teens should learn to _____ conflicts appropriately to maintain healthy relationships.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>resolve</span></button><button class="option" data-value="B"><span class="letter">B</span><span>delay</span></button><button class="option" data-value="C"><span class="letter">C</span><span>concentrate</span></button><button class="option" data-value="D"><span class="letter">D</span><span>accomplish</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> resolve = giải quyết. Cấu trúc “learn to + V” → learn to resolve. “Resolve conflicts” là cụm tự nhiên: giải quyết mâu thuẫn.<div class="vocab-mini"><b>A. resolve</b> = giải quyết • <b>B. delay</b> = trì hoãn • <b>C. concentrate</b> = tập trung • <b>D. accomplish</b> = hoàn thành</div></div>
+</div>
+<div class="question" data-answer="C">
+<div class="qtext"><span class="num">2</span>Prioritizing sleep is crucial; don't _____ bedtime due to distractions.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>concentrate</span></button><button class="option" data-value="B"><span class="letter">B</span><span>accomplish</span></button><button class="option" data-value="C"><span class="letter">C</span><span>delay</span></button><button class="option" data-value="D"><span class="letter">D</span><span>resolve</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Sau “don't” dùng động từ nguyên mẫu. Delay bedtime = trì hoãn giờ đi ngủ; do đó C phù hợp nghĩa câu.<div class="vocab-mini"><b>A. concentrate</b> = tập trung • <b>B. accomplish</b> = hoàn thành • <b>C. delay</b> = trì hoãn • <b>D. resolve</b> = giải quyết</div></div>
+</div>
+<div class="question" data-answer="C">
+<div class="qtext"><span class="num">3</span>Being _____ helps teens recognize their emotions and cope with stress.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>self-disciplined</span></button><button class="option" data-value="B"><span class="letter">B</span><span>stressed out</span></button><button class="option" data-value="C"><span class="letter">C</span><span>self-aware</span></button><button class="option" data-value="D"><span class="letter">D</span><span>well-balanced</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> “Being + adjective” mô tả trạng thái/tính chất. Self-aware = nhận thức rõ cảm xúc và bản thân, phù hợp với “recognize their emotions”.<div class="vocab-mini"><b>A. self-disciplined</b> = có tính tự giác • <b>B. stressed out</b> = căng thẳng • <b>C. self-aware</b> = tự nhận thức • <b>D. well-balanced</b> = cân bằng</div></div>
+</div>
+<div class="question" data-answer="A">
+<div class="qtext"><span class="num">4</span>A positive _____ contributes to overall well-being.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>mood</span></button><button class="option" data-value="B"><span class="letter">B</span><span>independence</span></button><button class="option" data-value="C"><span class="letter">C</span><span>priority</span></button><button class="option" data-value="D"><span class="letter">D</span><span>due date</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> A positive mood = tâm trạng tích cực. Đây là danh từ phù hợp sau “a positive”.<div class="vocab-mini"><b>A. mood</b> = tâm trạng • <b>B. independence</b> = sự độc lập • <b>C. priority</b> = sự ưu tiên • <b>D. due date</b> = hạn chót</div></div>
+</div>
+<div class="question" data-answer="B">
+<div class="qtext"><span class="num">5</span>Set a _____ for completing school projects to avoid last-minute stress.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>distraction</span></button><button class="option" data-value="B"><span class="letter">B</span><span>due date</span></button><button class="option" data-value="C"><span class="letter">C</span><span>counsellor</span></button><button class="option" data-value="D"><span class="letter">D</span><span>assignment</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Set a due date = đặt hạn hoàn thành. “A due date” là cụm danh từ chỉ thời hạn phải hoàn thành.<div class="vocab-mini"><b>A. distraction</b> = sự xao nhãng • <b>B. due date</b> = hạn hoàn thành • <b>C. counsellor</b> = cố vấn • <b>D. assignment</b> = bài tập/nhiệm vụ</div></div>
+</div>
+<div class="question" data-answer="B">
+<div class="qtext"><span class="num">6</span>_____ is a critical stage of development when teens transition from childhood to adulthood.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>Counsellor</span></button><button class="option" data-value="B"><span class="letter">B</span><span>Adolescence</span></button><button class="option" data-value="C"><span class="letter">C</span><span>Distraction</span></button><button class="option" data-value="D"><span class="letter">D</span><span>Priority</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Adolescence = tuổi vị thành niên, giai đoạn chuyển tiếp từ childhood sang adulthood.<div class="vocab-mini"><b>A. Counsellor</b> = cố vấn • <b>B. Adolescence</b> = tuổi vị thành niên • <b>C. Distraction</b> = sự xao nhãng • <b>D. Priority</b> = sự ưu tiên</div></div>
+</div>
+<div class="question" data-answer="A">
+<div class="qtext"><span class="num">7</span>Regular exercise is essential for maintaining _____ health and preventing obesity.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>physical</span></button><button class="option" data-value="B"><span class="letter">B</span><span>fattening</span></button><button class="option" data-value="C"><span class="letter">C</span><span>additional</span></button><button class="option" data-value="D"><span class="letter">D</span><span>stressed out</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Physical health = sức khỏe thể chất. “Maintaining + noun phrase” nên cần cụm danh từ phù hợp.<div class="vocab-mini"><b>A. physical</b> = thể chất • <b>B. fattening</b> = gây béo • <b>C. additional</b> = thêm • <b>D. stressed out</b> = căng thẳng</div></div>
+</div>
+<div class="question" data-answer="B">
+<div class="qtext"><span class="num">8</span>To _____ stress, consider talking to a school counsellor or seeking professional help.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>delay</span></button><button class="option" data-value="B"><span class="letter">B</span><span>minimize</span></button><button class="option" data-value="C"><span class="letter">C</span><span>attract</span></button><button class="option" data-value="D"><span class="letter">D</span><span>accomplish</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> To + V nguyên mẫu. Minimize stress = giảm thiểu căng thẳng, phù hợp với việc tìm tư vấn chuyên môn.<div class="vocab-mini"><b>A. delay</b> = trì hoãn • <b>B. minimize</b> = giảm thiểu • <b>C. attract</b> = thu hút • <b>D. accomplish</b> = hoàn thành</div></div>
+</div>
+<div class="question" data-answer="C">
+<div class="qtext"><span class="num">9</span>Setting a _____ for completing assignments helps manage time effectively.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>anxiety</span></button><button class="option" data-value="B"><span class="letter">B</span><span>mood</span></button><button class="option" data-value="C"><span class="letter">C</span><span>deadline</span></button><button class="option" data-value="D"><span class="letter">D</span><span>distraction</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Set a deadline = đặt hạn chót. Cụm này phù hợp với “manage time effectively”.<div class="vocab-mini"><b>A. anxiety</b> = sự lo âu • <b>B. mood</b> = tâm trạng • <b>C. deadline</b> = hạn chót • <b>D. distraction</b> = sự xao nhãng</div></div>
+</div>
+<div class="question" data-answer="D">
+<div class="qtext"><span class="num">10</span>Avoid _____ foods like sugary snacks and opt for nutritious ones instead.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>appropriate</span></button><button class="option" data-value="B"><span class="letter">B</span><span>additional</span></button><button class="option" data-value="C"><span class="letter">C</span><span>optimistic</span></button><button class="option" data-value="D"><span class="letter">D</span><span>fattening</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Fattening foods = thực phẩm gây tăng cân. “Avoid + noun/V-ing” nên D phù hợp về cả từ loại và nghĩa.<div class="vocab-mini"><b>A. appropriate</b> = phù hợp • <b>B. additional</b> = thêm • <b>C. optimistic</b> = lạc quan • <b>D. fattening</b> = gây béo</div></div>
+</div>
+<div class="question" data-answer="A">
+<div class="qtext"><span class="num">11</span>Staying _____ means maintaining a healthy mix of physical activity, social interactions, and rest.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>well-balanced</span></button><button class="option" data-value="B"><span class="letter">B</span><span>stressed out</span></button><button class="option" data-value="C"><span class="letter">C</span><span>self-aware</span></button><button class="option" data-value="D"><span class="letter">D</span><span>self-disciplined</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Well-balanced = cân bằng. Cụm “a well-balanced life” chỉ một cuộc sống có sự cân bằng giữa nhiều mặt.<div class="vocab-mini"><b>A. well-balanced</b> = cân bằng • <b>B. stressed out</b> = căng thẳng • <b>C. self-aware</b> = tự nhận thức • <b>D. self-disciplined</b> = tự giác</div></div>
+</div>
+<div class="question" data-answer="B">
+<div class="qtext"><span class="num">12</span>An additional benefit of exercise is improved mood and reduced _____.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>due date</span></button><button class="option" data-value="B"><span class="letter">B</span><span>anxiety</span></button><button class="option" data-value="C"><span class="letter">C</span><span>task</span></button><button class="option" data-value="D"><span class="letter">D</span><span>assignment</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Reduced anxiety = giảm lo âu. Exercise có thể được nói đến cùng improved mood và reduced anxiety.<div class="vocab-mini"><b>A. due date</b> = hạn chót • <b>B. anxiety</b> = lo âu • <b>C. task</b> = nhiệm vụ • <b>D. assignment</b> = bài tập</div></div>
+</div>
+<div class="question" data-answer="D">
+<div class="qtext"><span class="num">13</span>A _____ can provide guidance on academic and emotional matters.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>accomplishment</span></button><button class="option" data-value="B"><span class="letter">B</span><span>adolescence</span></button><button class="option" data-value="C"><span class="letter">C</span><span>adulthood</span></button><button class="option" data-value="D"><span class="letter">D</span><span>counsellor</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> A counsellor = người tư vấn/cố vấn. “Provide guidance” là cung cấp sự hướng dẫn.<div class="vocab-mini"><b>A. accomplishment</b> = thành tựu • <b>B. adolescence</b> = tuổi vị thành niên • <b>C. adulthood</b> = tuổi trưởng thành • <b>D. counsellor</b> = cố vấn</div></div>
+</div>
+<div class="question" data-answer="B">
+<div class="qtext"><span class="num">14</span>Prioritize tasks to _____ them efficiently.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>raise</span></button><button class="option" data-value="B"><span class="letter">B</span><span>accomplish</span></button><button class="option" data-value="C"><span class="letter">C</span><span>minimize</span></button><button class="option" data-value="D"><span class="letter">D</span><span>delay</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> To + V nguyên mẫu; accomplish tasks = hoàn thành nhiệm vụ.<div class="vocab-mini"><b>A. raise</b> = nâng lên • <b>B. accomplish</b> = hoàn thành • <b>C. minimize</b> = giảm thiểu • <b>D. delay</b> = trì hoãn</div></div>
+</div>
+<div class="question" data-answer="D">
+<div class="qtext"><span class="num">15</span>A _____ approach to eating helps maintain a healthy weight.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>self-aware</span></button><button class="option" data-value="B"><span class="letter">B</span><span>beautiful</span></button><button class="option" data-value="C"><span class="letter">C</span><span>stressed out</span></button><button class="option" data-value="D"><span class="letter">D</span><span>self-disciplined</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Self-disciplined approach = cách tiếp cận có tính kỷ luật/tự giác. Ăn uống có kiểm soát giúp duy trì cân nặng khỏe mạnh.<div class="vocab-mini"><b>A. self-aware</b> = tự nhận thức • <b>B. beautiful</b> = đẹp • <b>C. stressed out</b> = căng thẳng • <b>D. self-disciplined</b> = có tính tự giác</div></div>
+</div>
+<div class="question" data-answer="B">
+<div class="qtext"><span class="num">16</span>Don't let academic pressures leave you feeling _____.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>fattening</span></button><button class="option" data-value="B"><span class="letter">B</span><span>stressed out</span></button><button class="option" data-value="C"><span class="letter">C</span><span>happy</span></button><button class="option" data-value="D"><span class="letter">D</span><span>optimistic</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> “leave + O + adjective” = khiến ai ở trạng thái nào. Stressed out = rất căng thẳng.<div class="vocab-mini"><b>A. fattening</b> = gây béo • <b>B. stressed out</b> = căng thẳng • <b>C. happy</b> = hạnh phúc • <b>D. optimistic</b> = lạc quan</div></div>
+</div>
+<div class="question" data-answer="C">
+<div class="qtext"><span class="num">17</span>Stay _____ even during challenging times; a positive mindset is essential.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>frustrated</span></button><button class="option" data-value="B"><span class="letter">B</span><span>physical</span></button><button class="option" data-value="C"><span class="letter">C</span><span>optimistic</span></button><button class="option" data-value="D"><span class="letter">D</span><span>relaxed</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Stay + adjective. Optimistic = lạc quan, phù hợp với “a positive mindset”.<div class="vocab-mini"><b>A. frustrated</b> = bực bội • <b>B. physical</b> = thuộc thể chất • <b>C. optimistic</b> = lạc quan • <b>D. relaxed</b> = thư giãn</div></div>
+</div>
+<div class="question" data-answer="C">
+<div class="qtext"><span class="num">18</span>Avoid _____ like excessive screen time when studying.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>moods</span></button><button class="option" data-value="B"><span class="letter">B</span><span>priorities</span></button><button class="option" data-value="C"><span class="letter">C</span><span>distractions</span></button><button class="option" data-value="D"><span class="letter">D</span><span>due dates</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Avoid + noun. Excessive screen time có thể là distraction = yếu tố gây xao nhãng.<div class="vocab-mini"><b>A. moods</b> = tâm trạng • <b>B. priorities</b> = ưu tiên • <b>C. distractions</b> = sự xao nhãng • <b>D. due dates</b> = hạn chót</div></div>
+</div>
+<div class="question" data-answer="A">
+<div class="qtext"><span class="num">19</span>Regular exercise has both physical and _____ health benefits.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>mental</span></button><button class="option" data-value="B"><span class="letter">B</span><span>embarrassed</span></button><button class="option" data-value="C"><span class="letter">C</span><span>optimistic</span></button><button class="option" data-value="D"><span class="letter">D</span><span>fattening</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Cặp từ tự nhiên “physical and mental health” = sức khỏe thể chất và tinh thần.<div class="vocab-mini"><b>A. mental</b> = tinh thần • <b>B. embarrassed</b> = xấu hổ • <b>C. optimistic</b> = lạc quan • <b>D. fattening</b> = gây béo</div></div>
+</div>
+<div class="question" data-answer="B">
+<div class="qtext"><span class="num">20</span>If it snows tomorrow, we _____ have to cancel our outdoor event.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>can</span></button><button class="option" data-value="B"><span class="letter">B</span><span>may</span></button><button class="option" data-value="C"><span class="letter">C</span><span>must</span></button><button class="option" data-value="D"><span class="letter">D</span><span>should</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> May diễn tả khả năng có thể xảy ra trong tương lai: nếu tuyết rơi, chúng ta có thể phải hủy sự kiện.<div class="vocab-mini"><b>A. can</b> = có thể • <b>B. may</b> = có thể • <b>C. must</b> = phải • <b>D. should</b> = nên</div></div>
+</div>
+<div class="question" data-answer="A">
+<div class="qtext"><span class="num">21</span>If you enroll in our intensive Spanish class, you _____ speak this language fluently after two months.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>can</span></button><button class="option" data-value="B"><span class="letter">B</span><span>should</span></button><button class="option" data-value="C"><span class="letter">C</span><span>must</span></button><button class="option" data-value="D"><span class="letter">D</span><span>need</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Can diễn tả khả năng. Sau hai tháng học chuyên sâu, câu nói về khả năng có thể nói lưu loát.<div class="vocab-mini"><b>A. can</b> = có thể • <b>B. should</b> = nên • <b>C. must</b> = phải • <b>D. need</b> = cần</div></div>
+</div>
+<div class="question" data-answer="C">
+<div class="qtext"><span class="num">22</span>If you want to pass the driving test, you _____ study harder and practise more regularly.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>may</span></button><button class="option" data-value="B"><span class="letter">B</span><span>will</span></button><button class="option" data-value="C"><span class="letter">C</span><span>must</span></button><button class="option" data-value="D"><span class="letter">D</span><span>might</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Must = phải, diễn tả sự cần thiết mạnh. “If you want to…” → muốn đạt mục tiêu thì phải học chăm hơn.<div class="vocab-mini"><b>A. may</b> = có thể • <b>B. will</b> = sẽ • <b>C. must</b> = phải • <b>D. might</b> = có thể</div></div>
+</div>
+<div class="question" data-answer="B">
+<div class="qtext"><span class="num">23</span>If it's a private event, you _____ attend without an invitation.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>shouldn't</span></button><button class="option" data-value="B"><span class="letter">B</span><span>mustn't</span></button><button class="option" data-value="C"><span class="letter">C</span><span>may not</span></button><button class="option" data-value="D"><span class="letter">D</span><span>needn't</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Mustn't = không được phép. Đây là quy định/cấm đoán, không chỉ là lời khuyên.<div class="vocab-mini"><b>A. shouldn't</b> = không nên • <b>B. mustn't</b> = không được phép • <b>C. may not</b> = có thể không • <b>D. needn't</b> = không cần</div></div>
+</div>
+<div class="question" data-answer="A">
+<div class="qtext"><span class="num">24</span>If you want to stay healthy, you _____ eat too much junk food.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>shouldn't</span></button><button class="option" data-value="B"><span class="letter">B</span><span>needn't</span></button><button class="option" data-value="C"><span class="letter">C</span><span>can't</span></button><button class="option" data-value="D"><span class="letter">D</span><span>might not</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Shouldn't = không nên, dùng để đưa lời khuyên.<div class="vocab-mini"><b>A. shouldn't</b> = không nên • <b>B. needn't</b> = không cần • <b>C. can't</b> = không thể • <b>D. might not</b> = có thể không</div></div>
+</div>
+<div class="question" data-answer="C">
+<div class="qtext"><span class="num">25</span>If they start saving money from now, they _____ afford to go to Ha Long Bay on holiday.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>should</span></button><button class="option" data-value="B"><span class="letter">B</span><span>need</span></button><button class="option" data-value="C"><span class="letter">C</span><span>can</span></button><button class="option" data-value="D"><span class="letter">D</span><span>must</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Can = có khả năng/có đủ khả năng chi trả trong điều kiện đó.<div class="vocab-mini"><b>A. should</b> = nên • <b>B. need</b> = cần • <b>C. can</b> = có thể • <b>D. must</b> = phải</div></div>
+</div>
+<div class="question" data-answer="B">
+<div class="qtext"><span class="num">26</span>If I get the job offer today, I _____ accept it and start working on Monday.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>should</span></button><button class="option" data-value="B"><span class="letter">B</span><span>might</span></button><button class="option" data-value="C"><span class="letter">C</span><span>need</span></button><button class="option" data-value="D"><span class="letter">D</span><span>must</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Might = có thể, diễn tả khả năng chưa chắc chắn.<div class="vocab-mini"><b>A. should</b> = nên • <b>B. might</b> = có thể • <b>C. need</b> = cần • <b>D. must</b> = phải</div></div>
+</div>
+<div class="question" data-answer="D">
+<div class="qtext"><span class="num">27</span>If you want to enhance your well-being, you _____ stay up too late.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>needn't</span></button><button class="option" data-value="B"><span class="letter">B</span><span>may not</span></button><button class="option" data-value="C"><span class="letter">C</span><span>might not</span></button><button class="option" data-value="D"><span class="letter">D</span><span>shouldn't</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Shouldn't = không nên. Thức quá khuya không phù hợp với mục tiêu cải thiện sức khỏe.<div class="vocab-mini"><b>A. needn't</b> = không cần • <b>B. may not</b> = có thể không • <b>C. might not</b> = có thể không • <b>D. shouldn't</b> = không nên</div></div>
+</div>
+<div class="question" data-answer="B">
+<div class="qtext"><span class="num">28</span>If you don't charge the battery, your device _____ function properly.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>mustn't</span></button><button class="option" data-value="B"><span class="letter">B</span><span>can't</span></button><button class="option" data-value="C"><span class="letter">C</span><span>shouldn't</span></button><button class="option" data-value="D"><span class="letter">D</span><span>needn't</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Can't = không thể hoạt động. Không sạc pin → thiết bị không thể hoạt động bình thường.<div class="vocab-mini"><b>A. mustn't</b> = không được • <b>B. can't</b> = không thể • <b>C. shouldn't</b> = không nên • <b>D. needn't</b> = không cần</div></div>
+</div>
+<div class="question" data-answer="D">
+<div class="qtext"><span class="num">29</span>If you want to travel to Australia, you _____ have a valid passport.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>should</span></button><button class="option" data-value="B"><span class="letter">B</span><span>may</span></button><button class="option" data-value="C"><span class="letter">C</span><span>can</span></button><button class="option" data-value="D"><span class="letter">D</span><span>must</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Must = phải, diễn tả yêu cầu bắt buộc.<div class="vocab-mini"><b>A. should</b> = nên • <b>B. may</b> = có thể • <b>C. can</b> = có thể • <b>D. must</b> = phải</div></div>
+</div>
+<div class="question" data-answer="A">
+<div class="qtext"><span class="num">30</span>If you want to graduate, you _____ complete all the required coursework.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>must</span></button><button class="option" data-value="B"><span class="letter">B</span><span>should</span></button><button class="option" data-value="C"><span class="letter">C</span><span>can</span></button><button class="option" data-value="D"><span class="letter">D</span><span>might</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Must = phải. Hoàn thành coursework là điều kiện bắt buộc để tốt nghiệp.<div class="vocab-mini"><b>A. must</b> = phải • <b>B. should</b> = nên • <b>C. can</b> = có thể • <b>D. might</b> = có thể</div></div>
+</div>
+<div class="question" data-answer="C">
+<div class="qtext"><span class="num">31</span>If we don't book our tickets in advance, we _____ guarantee seats for the concert.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>shouldn't</span></button><button class="option" data-value="B"><span class="letter">B</span><span>mustn't</span></button><button class="option" data-value="C"><span class="letter">C</span><span>can't</span></button><button class="option" data-value="D"><span class="letter">D</span><span>might not</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Can't = không thể bảo đảm chỗ ngồi nếu không đặt vé trước.<div class="vocab-mini"><b>A. shouldn't</b> = không nên • <b>B. mustn't</b> = không được • <b>C. can't</b> = không thể • <b>D. might not</b> = có thể không</div></div>
+</div>
+<div class="question" data-answer="A">
+<div class="qtext"><span class="num">32</span>If you want to have a productive meeting, you _____ carefully make a plan and set clear goals.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>can</span></button><button class="option" data-value="B"><span class="letter">B</span><span>might</span></button><button class="option" data-value="C"><span class="letter">C</span><span>must</span></button><button class="option" data-value="D"><span class="letter">D</span><span>may</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Can = có thể; theo đáp án cung cấp, câu nhấn mạnh khả năng thực hiện kế hoạch để cuộc họp hiệu quả.<div class="vocab-mini"><b>A. can</b> = có thể • <b>B. might</b> = có thể • <b>C. must</b> = phải • <b>D. may</b> = có thể</div></div>
+</div>
+<div class="question" data-answer="C">
+<div class="qtext"><span class="num">33</span>If the traffic is heavy, we _____ make it to the movie theater before the show starts.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>needn't</span></button><button class="option" data-value="B"><span class="letter">B</span><span>can</span></button><button class="option" data-value="C"><span class="letter">C</span><span>might not</span></button><button class="option" data-value="D"><span class="letter">D</span><span>mustn't</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Might not = có thể không. Giao thông đông khiến khả năng đến kịp giờ không chắc chắn.<div class="vocab-mini"><b>A. needn't</b> = không cần • <b>B. can</b> = có thể • <b>C. might not</b> = có thể không • <b>D. mustn't</b> = không được</div></div>
+</div>
+<div class="question" data-answer="A">
+<div class="qtext"><span class="num">34</span>If you want to sleep well at night, you _____ drink too much caffeine after 3 p.m.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>shouldn't</span></button><button class="option" data-value="B"><span class="letter">B</span><span>may not</span></button><button class="option" data-value="C"><span class="letter">C</span><span>can't</span></button><button class="option" data-value="D"><span class="letter">D</span><span>won't</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Shouldn't = không nên, dùng cho lời khuyên.<div class="vocab-mini"><b>A. shouldn't</b> = không nên • <b>B. may not</b> = có thể không • <b>C. can't</b> = không thể • <b>D. won't</b> = sẽ không</div></div>
+</div>
+<div class="question" data-answer="D">
+<div class="qtext"><span class="num">35</span>If you don't have a membership, you _____ access this exclusive club.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>may not</span></button><button class="option" data-value="B"><span class="letter">B</span><span>might not</span></button><button class="option" data-value="C"><span class="letter">C</span><span>shouldn't</span></button><button class="option" data-value="D"><span class="letter">D</span><span>can't</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Can't = không thể/không được phép truy cập vì không có membership.<div class="vocab-mini"><b>A. may not</b> = có thể không • <b>B. might not</b> = có thể không • <b>C. shouldn't</b> = không nên • <b>D. can't</b> = không thể</div></div>
+</div>
+<div class="question" data-answer="B">
+<div class="qtext"><span class="num">36</span>If they want to participate in the competition, they _____ violate any of these regulations.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>shouldn't</span></button><button class="option" data-value="B"><span class="letter">B</span><span>mustn't</span></button><button class="option" data-value="C"><span class="letter">C</span><span>can't</span></button><button class="option" data-value="D"><span class="letter">D</span><span>might not</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Mustn't = không được phép vi phạm quy định.<div class="vocab-mini"><b>A. shouldn't</b> = không nên • <b>B. mustn't</b> = không được • <b>C. can't</b> = không thể • <b>D. might not</b> = có thể không</div></div>
+</div>
+<div class="question" data-answer="C">
+<div class="qtext"><span class="num">37</span>If you want to avoid traffic, you _____ leave early in the morning or consider another route.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>will</span></button><button class="option" data-value="B"><span class="letter">B</span><span>need</span></button><button class="option" data-value="C"><span class="letter">C</span><span>should</span></button><button class="option" data-value="D"><span class="letter">D</span><span>must</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Should = nên, dùng để đưa lời khuyên.<div class="vocab-mini"><b>A. will</b> = sẽ • <b>B. need</b> = cần • <b>C. should</b> = nên • <b>D. must</b> = phải</div></div>
+</div>
+<div class="question" data-answer="C">
+<div class="qtext"><span class="num">38</span>If you want to succeed in their career, you _____ consider pursuing further education.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>can</span></button><button class="option" data-value="B"><span class="letter">B</span><span>might</span></button><button class="option" data-value="C"><span class="letter">C</span><span>can</span></button><button class="option" data-value="D"><span class="letter">D</span><span>must</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Can = có thể/có khả năng cân nhắc. Theo đáp án trong ảnh, C.<div class="vocab-mini"><b>A. can</b> = có thể • <b>B. might</b> = có thể • <b>C. can</b> = có thể • <b>D. must</b> = phải</div></div>
+</div>
+<div class="question" data-answer="A">
+<div class="qtext"><span class="num">39</span>If the team works effectively, they _____ complete the project ahead of schedule.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>can</span></button><button class="option" data-value="B"><span class="letter">B</span><span>must</span></button><button class="option" data-value="C"><span class="letter">C</span><span>can't</span></button><button class="option" data-value="D"><span class="letter">D</span><span>mustn't</span></button></div>
+<div aria-live="polite" class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Can = có thể. Làm việc hiệu quả tạo khả năng hoàn thành dự án sớm.<div class="vocab-mini"><b>A. can</b> = có thể • <b>B. must</b> = phải • <b>C. can't</b> = không thể • <b>D. mustn't</b> = không được</div></div>
+</div>
+<button class="check-btn" onclick="checkSection('exercise1')">✓ Chấm bài</button>
+<button class="reset-btn" onclick="resetSection('exercise1')">↻ Làm lại</button>
+</div>
+</section>
+<section class="section" id="bracket">
+<div class="section-head"><span>Exercise 2 – Circle the correct option in brackets.</span><span class="score" id="bracket-score">0 / 10</span></div>
+<div class="section-body">
+<div class="question bracket-q" data-answer="must">
+<div class="qtext"><span class="num">1</span>If it rains tomorrow, the teenagers 
+            <button class="inline-choice" data-value="mustn't">mustn't</button> /
+            <button class="inline-choice" data-value="must">must</button> wear raincoats to school.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Must = phải. Mệnh đề điều kiện tạo ra tình huống cần thiết; must wear = phải mặc.</div>
+</div>
+<div class="question bracket-q" data-answer="should">
+<div class="qtext"><span class="num">2</span>They 
+            <button class="inline-choice" data-value="might">might</button> /
+            <button class="inline-choice" data-value="should">should</button> understand the new concept better if they study together.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Should = nên/có khả năng theo ngữ cảnh lời khuyên. Theo đáp án cung cấp, chọn should.</div>
+</div>
+<div class="question bracket-q" data-answer="don't eat">
+<div class="qtext"><span class="num">3</span>You'll feel hungry before lunch if you 
+            <button class="inline-choice" data-value="won't eat">won't eat</button> /
+            <button class="inline-choice" data-value="don't eat">don't eat</button> breakfast.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Trong mệnh đề if của điều kiện loại 1 dùng hiện tại đơn: if + S + V. Không dùng will/won't.</div>
+</div>
+<div class="question bracket-q" data-answer="can">
+<div class="qtext"><span class="num">4</span>Emily 
+            <button class="inline-choice" data-value="can">can</button> /
+            <button class="inline-choice" data-value="must">must</button> buy the new phone she wants if she saves money.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Can = có thể. Tiết kiệm tiền tạo khả năng mua điện thoại.</div>
+</div>
+<div class="question bracket-q" data-answer="might">
+<div class="qtext"><span class="num">5</span>If Johnny exercises more, he 
+            <button class="inline-choice" data-value="must">must</button> /
+            <button class="inline-choice" data-value="might">might</button> feel healthier.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Might = có thể, diễn tả kết quả có khả năng xảy ra chứ không chắc chắn.</div>
+</div>
+<div class="question bracket-q" data-answer="doesn't study">
+<div class="qtext"><span class="num">6</span>She will probably fail if she 
+            <button class="inline-choice" data-value="doesn't study">doesn't study</button> /
+            <button class="inline-choice" data-value="studies">studies</button> for the test.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Điều kiện loại 1: if + hiện tại đơn. “If she doesn't study” = nếu cô ấy không học.</div>
+</div>
+<div class="question bracket-q" data-answer="will">
+<div class="qtext"><span class="num">7</span>If the team trains hard, they 
+            <button class="inline-choice" data-value="will">will</button> /
+            <button class="inline-choice" data-value="should">should</button> have a chance of winning the competition.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Điều kiện loại 1: If + hiện tại đơn, S + will + V. “will have” diễn tả kết quả có thể xảy ra.</div>
+</div>
+<div class="question bracket-q" data-answer="can">
+<div class="qtext"><span class="num">8</span>You 
+            <button class="inline-choice" data-value="can">can</button> /
+            <button class="inline-choice" data-value="may not">may not</button> improve your skills if you practice playing guitar every day.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Can = có thể. Luyện tập mỗi ngày tạo khả năng cải thiện kỹ năng.</div>
+</div>
+<div class="question bracket-q" data-answer="may">
+<div class="qtext"><span class="num">9</span>If teenagers don't eat healthy food, they 
+            <button class="inline-choice" data-value="should">should</button> /
+            <button class="inline-choice" data-value="may">may</button> experience health problems later.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> May = có thể. Đây là khả năng xảy ra trong tương lai.</div>
+</div>
+<div class="question bracket-q" data-answer="won't be">
+<div class="qtext"><span class="num">10</span>Your parents 
+            <button class="inline-choice" data-value="aren't">aren't</button> /
+            <button class="inline-choice" data-value="won't be">won't be</button> happy if you can't finish your chores before playing video games.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Điều kiện loại 1: if + hiện tại đơn, mệnh đề chính dùng will + V. “won't be” = sẽ không vui.</div>
+</div>
+<button class="check-btn" onclick="checkSection('bracket')">✓ Chấm bài</button>
+<button class="reset-btn" onclick="resetSection('bracket')">↻ Làm lại</button>
+</div>
+</section>
+<section class="section" id="fill">
+<div class="section-head"><span>Exercise 3 – Fill in the blanks</span><span class="score" id="fill-score">0 / 5</span></div>
+<div class="section-body">
+<div class="word-box"><b>Word box:</b> mental · well-balanced · accomplish · delay · counsellor · fattening · priority · anxiety</div>
+<div class="question fill-q" data-answer="accomplish">
+<div class="qtext"><span class="num">1</span>Thanks to great planning and hard work, she was able to <input autocomplete="off" class="fill-input"/> her goals.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> be able to + V = có thể làm gì; accomplish goals = hoàn thành mục tiêu.</div>
+</div>
+<div class="question fill-q" data-answer="counsellor">
+<div class="qtext"><span class="num">2</span>The <input autocomplete="off" class="fill-input"/> provides support and advice to students who are facing academic difficulties.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Counsellor = người tư vấn/cố vấn; “provide support and advice” phù hợp với nghề này.</div>
+</div>
+<div class="question fill-q" data-answer="anxiety">
+<div class="qtext"><span class="num">3</span>The therapist gave her some tips to reduce her <input autocomplete="off" class="fill-input"/> levels.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Anxiety = sự lo âu. “Anxiety levels” = mức độ lo âu.</div>
+</div>
+<div class="question fill-q" data-answer="well-balanced">
+<div class="qtext"><span class="num">4</span>To maintain a healthy lifestyle, it's important to have a <input autocomplete="off" class="fill-input"/> diet with a lot of vegetables and fruits.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> A well-balanced diet = chế độ ăn cân bằng, có đủ các nhóm thực phẩm.</div>
+</div>
+<div class="question fill-q" data-answer="fattening">
+<div class="qtext"><span class="num">5</span>Eating too much <input autocomplete="off" class="fill-input"/> food can make you gain weight fast.</div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Fattening food = thức ăn gây béo/tăng cân; “Eating too much + noun” phù hợp.</div>
+</div>
+<button class="check-btn" onclick="checkSection('fill')">✓ Chấm bài</button>
+<button class="reset-btn" onclick="resetSection('fill')">↻ Làm lại</button>
+</div>
+</section>
+<section class="section" id="synonym">
+<div class="section-head"><span>Exercise 4 – CLOSEST in meaning</span><span class="score" id="synonym-score">0 / 5</span></div>
+<div class="section-body">
+<div class="question" data-answer="D">
+<div class="qtext"><span class="num">1</span>Teens who engage in regular physical activity often feel <strong><u>delighted</u></strong> and energized.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>embarrassed</span></button><button class="option" data-value="B"><span class="letter">B</span><span>disappointed</span></button><button class="option" data-value="C"><span class="letter">C</span><span>worried</span></button><button class="option" data-value="D"><span class="letter">D</span><span>pleased</span></button></div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Delighted = rất vui, hài lòng; gần nghĩa với pleased = vui/hài lòng.</div>
+</div>
+<div class="question" data-answer="A">
+<div class="qtext"><span class="num">2</span>Making health a <strong><u>priority</u></strong> ensures that teens allocate time for exercise and nutritious meals.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>precedence</span></button><button class="option" data-value="B"><span class="letter">B</span><span>deadline</span></button><button class="option" data-value="C"><span class="letter">C</span><span>distraction</span></button><button class="option" data-value="D"><span class="letter">D</span><span>anxiety</span></button></div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Priority = điều được ưu tiên; precedence = sự ưu tiên/thứ tự được đặt trước.</div>
+</div>
+<div class="question" data-answer="C">
+<div class="qtext"><span class="num">3</span>Achieving fitness goals, like running a mile or doing yoga, leaves teens feeling <strong><u>accomplished</u></strong>.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>mental</span></button><button class="option" data-value="B"><span class="letter">B</span><span>stressed</span></button><button class="option" data-value="C"><span class="letter">C</span><span>finished</span></button><button class="option" data-value="D"><span class="letter">D</span><span>optimistic</span></button></div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Accomplished trong ngữ cảnh này = đã đạt được mục tiêu/thành tựu; finished gần nghĩa theo đáp án đề.</div>
+</div>
+<div class="question" data-answer="A">
+<div class="qtext"><span class="num">4</span>Teens experiencing <strong><u>anxiety</u></strong> can benefit from mindfulness practices and seeking professional support.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>nervousness</span></button><button class="option" data-value="B"><span class="letter">B</span><span>counsellor</span></button><button class="option" data-value="C"><span class="letter">C</span><span>mood</span></button><button class="option" data-value="D"><span class="letter">D</span><span>priority</span></button></div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Anxiety = lo âu; nervousness = sự hồi hộp/lo lắng, gần nghĩa.</div>
+</div>
+<div class="question" data-answer="A">
+<div class="qtext"><span class="num">5</span>You may not be able to identify if your teenager is <strong><u>stressed</u></strong> or is just being a “teen”.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>tensed</span></button><button class="option" data-value="B"><span class="letter">B</span><span>worried</span></button><button class="option" data-value="C"><span class="letter">C</span><span>depressed</span></button><button class="option" data-value="D"><span class="letter">D</span><span>terrible</span></button></div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Stressed = căng thẳng; tensed = ở trạng thái căng.</div>
+</div>
+<button class="check-btn" onclick="checkSection('synonym')">✓ Chấm bài</button>
+<button class="reset-btn" onclick="resetSection('synonym')">↻ Làm lại</button>
+</div></section>
+<section class="section" id="antonym">
+<div class="section-head"><span>Exercise 5 – OPPOSITE in meaning</span><span class="score" id="antonym-score">0 / 5</span></div>
+<div class="section-body">
+<div class="question" data-answer="B">
+<div class="qtext"><span class="num">1</span>Managing schoolwork, extracurricular activities, and social life can leave teens feeling <strong><u>stressed out</u></strong>.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>pleased</span></button><button class="option" data-value="B"><span class="letter">B</span><span>relaxed</span></button><button class="option" data-value="C"><span class="letter">C</span><span>frightened</span></button><button class="option" data-value="D"><span class="letter">D</span><span>tensed</span></button></div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Stressed out = rất căng thẳng; relaxed = thư giãn, đối nghĩa.</div>
+</div>
+<div class="question" data-answer="D">
+<div class="qtext"><span class="num">2</span>You should follow these simple strategies to <strong><u>overcome</u></strong> stress.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>control</span></button><button class="option" data-value="B"><span class="letter">B</span><span>get over</span></button><button class="option" data-value="C"><span class="letter">C</span><span>manage</span></button><button class="option" data-value="D"><span class="letter">D</span><span>fail</span></button></div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Overcome = vượt qua; fail = thất bại, đối nghĩa theo đáp án cung cấp.</div>
+</div>
+<div class="question" data-answer="A">
+<div class="qtext"><span class="num">3</span>Some teens may feel <strong><u>pessimistic</u></strong> about their body image, but focusing on positive aspects helps build confidence.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>optimistic</span></button><button class="option" data-value="B"><span class="letter">B</span><span>inexpensive</span></button><button class="option" data-value="C"><span class="letter">C</span><span>unhealthy</span></button><button class="option" data-value="D"><span class="letter">D</span><span>unwealthy</span></button></div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Pessimistic = bi quan; optimistic = lạc quan, đối nghĩa.</div>
+</div>
+<div class="question" data-answer="D">
+<div class="qtext"><span class="num">4</span>The team had to <strong><u>delay</u></strong> the meeting until next week due to an emergency.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>put on</span></button><button class="option" data-value="B"><span class="letter">B</span><span>take on</span></button><button class="option" data-value="C"><span class="letter">C</span><span>turn down</span></button><button class="option" data-value="D"><span class="letter">D</span><span>go on</span></button></div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Delay = trì hoãn; go on = tiếp tục, mang nghĩa đối lập trong ngữ cảnh.</div>
+</div>
+<div class="question" data-answer="B">
+<div class="qtext"><span class="num">5</span>If you practise good posture, you can appear more <strong><u>confident</u></strong>.</div>
+<div class="options"><button class="option" data-value="A"><span class="letter">A</span><span>additional</span></button><button class="option" data-value="B"><span class="letter">B</span><span>distrustful</span></button><button class="option" data-value="C"><span class="letter">C</span><span>calm</span></button><button class="option" data-value="D"><span class="letter">D</span><span>delighted</span></button></div>
+<div class="feedback"></div>
+<div class="explanation"><b>Giải thích:</b> Confident = tự tin; distrustful = thiếu tin tưởng/nghi ngờ, đối lập với sự tự tin theo đáp án.</div>
+</div>
+<button class="check-btn" onclick="checkSection('antonym')">✓ Chấm bài</button>
+<button class="reset-btn" onclick="resetSection('antonym')">↻ Làm lại</button>
+</div></section>
+<footer>Answer key follows the answers highlighted in the supplied images.</footer>
+</div>
+<script>
+function speakWord(word){
+ if(!('speechSynthesis' in window)){alert('Your browser does not support speech synthesis.');return;}
+ speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(word);u.lang='en-GB';u.rate=.82;u.pitch=1;
+ const vs=speechSynthesis.getVoices();const uk=vs.find(v=>v.lang&&v.lang.toLowerCase().startsWith('en-gb'));if(uk)u.voice=uk;
+ speechSynthesis.speak(u);
+}
+document.querySelectorAll('.option').forEach(btn=>btn.addEventListener('click',()=>{
+ const p=btn.closest('.question');p.querySelectorAll('.option').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');
+}));
+document.querySelectorAll('.inline-choice').forEach(btn=>btn.addEventListener('click',()=>{
+ const p=btn.closest('.question');p.querySelectorAll('.inline-choice').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');
+}));
+function norm(s){return(s||'').trim().toLowerCase().replace(/[’']/g,"'");}
+function checkSection(id){
+ const sec=document.getElementById(id),qs=[...sec.querySelectorAll('.question')];let score=0;
+ qs.forEach(q=>{
+  const ans=norm(q.dataset.answer);let chosen='';const input=q.querySelector('.fill-input');
+  if(input)chosen=norm(input.value);else{const sel=q.querySelector('.option.selected,.inline-choice.selected');if(sel)chosen=norm(sel.dataset.value);}
+  q.querySelectorAll('.option,.inline-choice').forEach(b=>b.classList.remove('correct','wrong'));
+  const fb=q.querySelector('.feedback'),exp=q.querySelector('.explanation');exp.classList.add('show');
+  if(chosen===ans){score++;fb.textContent='✓ Correct!';fb.className='feedback good';const sel=q.querySelector('.option.selected,.inline-choice.selected');if(sel)sel.classList.add('correct');if(input)input.style.borderBottomColor='var(--green)';}
+  else{fb.textContent=chosen?'✗ Incorrect. Xem đáp án và giải thích bên dưới.':'⚠ Chưa chọn đáp án.';fb.className='feedback bad';const sel=q.querySelector('.option.selected,.inline-choice.selected');if(sel)sel.classList.add('wrong');q.querySelectorAll('.option,.inline-choice').forEach(b=>{if(norm(b.dataset.value)===ans)b.classList.add('correct')});if(input)input.style.borderBottomColor='var(--red)';}
+ });
+ document.getElementById(id+'-score').textContent=score+' / '+qs.length;
+}
+function resetSection(id){
+ const sec=document.getElementById(id);sec.querySelectorAll('.question').forEach(q=>{
+  q.querySelectorAll('.option,.inline-choice').forEach(b=>b.classList.remove('selected','correct','wrong'));
+  const input=q.querySelector('.fill-input');if(input){input.value='';input.style.borderBottomColor='#6e8bb4';}
+  const fb=q.querySelector('.feedback');fb.textContent='';fb.className='feedback';q.querySelector('.explanation').classList.remove('show');
+ });document.getElementById(id+'-score').textContent='0 / '+sec.querySelectorAll('.question').length;
+}
+if('speechSynthesis' in window)speechSynthesis.getVoices();
+</script>
+</body></html>
